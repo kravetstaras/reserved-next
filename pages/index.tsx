@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import RestaurantCard from "../components/home/RestaurantCard";
 import HomeHeader from "../components/home/HomeHeader";
-import { PrismaClient, PRICE, Cuisine, Location } from "@prisma/client";
+import { PrismaClient, PRICE } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ export interface RestaurantCardType {
   main_image: string;
   cuisine: string;
   location: string;
-  price: string;
+  price: PRICE;
   slug: string;
 }
 
@@ -68,7 +68,6 @@ export default function Home({
 export async function getServerSideProps() {
   const restaurants = await fetchRestaurants();
 
-  console.log(restaurants);
   return {
     props: { restaurants },
   };
