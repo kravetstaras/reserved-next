@@ -8,6 +8,7 @@ import RestaurantReservationCard from "../../../components/restaurant/Restaurant
 import RestaurantLayout from "../../../components/restaurant/RestaurantLayout";
 import RestaurantHead from "../../../components/restaurant/RestaurantHead";
 import { PrismaClient, Review } from "@prisma/client";
+import { notFound } from "next/navigation";
 interface IRestaurant {
   id: number;
   name: string;
@@ -65,9 +66,7 @@ export async function getServerSideProps(context: { query: { slug: any } }) {
   const restaurant = await fetchRestaurant(slug);
 
   if (!restaurant) {
-    return {
-      notFound: true,
-    };
+    notFound();
   }
 
   return {
