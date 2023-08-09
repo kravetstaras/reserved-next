@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RestaurantCardType } from "../../pages/index";
 import Price from "../common/Price";
+import Stars from "../common/Stars";
 
 export default function RestaurantCard({
   name,
@@ -9,6 +10,7 @@ export default function RestaurantCard({
   location,
   price,
   slug,
+  reviews,
 }: RestaurantCardType) {
   return (
     <div className="w-64 h-72 m-3 rounded overflow-hidden border cursor-pointer">
@@ -17,8 +19,10 @@ export default function RestaurantCard({
         <div className="p-1">
           <h3 className="font-bold text-2xl mb-2">{name}</h3>
           <div className="flex items-start">
-            <div className="flex mb-2">*****</div>
-            <p className="ml-2">77 reviews</p>
+            <Stars reviews={reviews} />
+            <p className="ml-2">
+              {reviews.length} review{reviews.length === 1 ? "" : "s"}
+            </p>
           </div>
           <div className="flex text-reg font-light capitalize">
             <p className=" mr-3">{cuisine}</p>

@@ -1,8 +1,8 @@
 import SearchHeader from "../components/search/SearchHeader";
 import SearchSidebar from "../components/search/SearchSidebar";
-import SearchRestaurantCard from "../components/search/SearchResaurantCar";
+import SearchRestaurantCard from "../components/search/SearchResaurantCard";
 import SearchHead from "../components/search/SearchHead";
-import { PRICE, PrismaClient } from "@prisma/client";
+import { PRICE, PrismaClient, Review } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import { ParsedUrlQuery } from "querystring";
 interface ISearchItem {
@@ -13,6 +13,7 @@ interface ISearchItem {
   price: PRICE;
   slug: string;
   id: number;
+  reviews: Review[];
 }
 
 export interface ISearchParams {
@@ -83,6 +84,7 @@ const fetchRestaurantByParams = async (searchParams: ISearchParams) => {
           name: true,
         },
       },
+      reviews: true,
     },
   });
 

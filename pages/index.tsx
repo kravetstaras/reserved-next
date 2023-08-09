@@ -4,6 +4,15 @@ import HomeHeader from "../components/home/HomeHeader";
 import { PrismaClient, PRICE } from "@prisma/client";
 
 const prisma = new PrismaClient();
+interface IReview {
+  id: number;
+  first_name: string;
+  last_name: string;
+  text: string;
+  rating: number;
+  restaurant_id: number;
+  user_id: number;
+}
 
 export interface RestaurantCardType {
   id: number;
@@ -13,6 +22,7 @@ export interface RestaurantCardType {
   location: string;
   price: PRICE;
   slug: string;
+  reviews: IReview[];
 }
 
 const fetchRestaurants = async (): Promise<RestaurantCardType[]> => {
@@ -33,6 +43,17 @@ const fetchRestaurants = async (): Promise<RestaurantCardType[]> => {
         },
       },
       price: true,
+      reviews: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          text: true,
+          rating: true,
+          restaurant_id: true,
+          user_id: true,
+        },
+      },
     },
   });
 
@@ -67,7 +88,6 @@ export default function Home({
 
 export async function getServerSideProps() {
   const restaurants = await fetchRestaurants();
-
   return {
     props: { restaurants },
   };
