@@ -7,8 +7,11 @@ import RestaurantReviews from "../../../components/restaurant/RestaurantReviews"
 import RestaurantReservationCard from "../../../components/restaurant/RestaurantReservationCard";
 import RestaurantLayout from "../../../components/restaurant/RestaurantLayout";
 import RestaurantHead from "../../../components/restaurant/RestaurantHead";
+import Layout from "../../../components/common/Layout";
 import { PrismaClient, Review } from "@prisma/client";
 import { notFound } from "next/navigation";
+import { GetServerSidePropsContext } from "next";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 interface IRestaurant {
   id: number;
   name: string;
@@ -42,7 +45,7 @@ export default function Restaurant({
   restaurant: IRestaurant;
 }) {
   return (
-    <>
+    <Layout>
       <RestaurantHead />
       <RestaurantLayout slug={restaurant.slug}>
         <div className="bg-white w-[70%] rounded p-3 shadow">
@@ -57,19 +60,21 @@ export default function Restaurant({
           <RestaurantReservationCard />
         </div>
       </RestaurantLayout>
-    </>
+    </Layout>
   );
 }
 
-export async function getServerSideProps(context: { query: { slug: any } }) {
-  const { slug } = context.query;
-  const restaurant = await fetchRestaurant(slug);
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(context: GetServerSidePropsContext) {
+    const { slug } = context.query;
+    const restaurant = await fetchRestaurant(slug as string);
 
-  if (!restaurant) {
-    notFound();
-  }
+    if (!restaurant) {
+      notFound();
+    }
 
-  return {
-    props: { restaurant },
-  };
-}
+    return {
+      props: { restaurant },
+    };
+  },
+});

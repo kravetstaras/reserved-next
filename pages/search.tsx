@@ -2,9 +2,11 @@ import SearchHeader from "../components/search/SearchHeader";
 import SearchSidebar from "../components/search/SearchSidebar";
 import SearchRestaurantCard from "../components/search/SearchResaurantCard";
 import SearchHead from "../components/search/SearchHead";
+import Layout from "../components/common/Layout";
 import { PRICE, PrismaClient, Review } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import { ParsedUrlQuery } from "querystring";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0";
 interface ISearchItem {
   name: string;
   main_image: string;
@@ -127,7 +129,7 @@ export default function Search({
   searchParams: ISearchParams;
 }) {
   return (
-    <>
+    <Layout>
       <SearchHead />
       <SearchHeader />
       <div className="flex py-4 m-auto w-2/3 justify-between items-start">
@@ -148,33 +150,40 @@ export default function Search({
           )}
         </div>
       </div>
-    </>
+    </Layout>
   );
 }
 
-export async function getServerSideProps(
-  context: GetServerSidePropsContext<QueryParameters>
-) {
-  const { query } = context;
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(context: GetServerSidePropsContext) {
+    const { query } = context;
 
-  const searchParams: ISearchParams = {
-    city: query?.city ? query.city.toString() : null,
-    cuisine: query?.cuisine ? query.cuisine.toString() : null,
-    price: query?.price ? query.price.toString() : null,
-  };
+    const searchParams: ISearchParams = {
+      city: query?.city ? query.city.toString() : null,
+      cuisine: query?.cuisine ? query.cuisine.toString() : null,
+      price: query?.price ? query.price.toString() : null,
+    };
 
-  const restaurantsPromise = fetchRestaurantByParams(searchParams);
+    try {
+      const [restaurants, locations, cuisines] = await Promise.all([
+        fetchRestaurantByParams(searchParams),
+        fetchLocations(),
+        fetchCuisines(),
+      ]);
 
-  const restaurants = await restaurantsPromise;
-  const locations = await fetchLocations();
-  const cuisines = await fetchCuisines();
-
-  return {
-    props: {
-      restaurants,
-      locations,
-      cuisines,
-      searchParams,
-    },
-  };
-}
+      return {
+        props: {
+          restaurants,
+          locations,
+          cuisines,
+          searchParams,
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return {
+        notFound: true,
+      };
+    }
+  },
+});

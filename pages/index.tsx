@@ -2,6 +2,8 @@ import { Fragment } from "react";
 import RestaurantCard from "../components/home/RestaurantCard";
 import HomeHeader from "../components/home/HomeHeader";
 import { PrismaClient, PRICE } from "@prisma/client";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import HomeLayout from "../components/home/HomeLayout";
 
 const prisma = new PrismaClient();
 interface IReview {
@@ -71,24 +73,28 @@ export default function Home({
 }: {
   restaurants: RestaurantCardType[];
 }) {
+  const { user } = useUser();
+
   return (
-    <main>
-      <HomeHeader />
-      <div className="py-3 px-36 mt-10 flex flex-wrap justify-center">
-        {restaurants.length > 0 &&
-          restaurants.map((item) => (
-            <Fragment key={item.id}>
-              <RestaurantCard {...item} />
-            </Fragment>
-          ))}
-      </div>
-    </main>
+    <HomeLayout user={user}>
+      <main>
+        <HomeHeader />
+        <div className="py-3 px-36 mt-10 flex flex-wrap justify-center">
+          {restaurants.length > 0 &&
+            restaurants.map((item) => (
+              <Fragment key={item.id}>
+                <RestaurantCard {...item} />
+              </Fragment>
+            ))}
+        </div>
+      </main>
+    </HomeLayout>
   );
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps = async () => {
   const restaurants = await fetchRestaurants();
   return {
     props: { restaurants },
   };
-}
+};
