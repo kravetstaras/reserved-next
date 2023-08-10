@@ -17,17 +17,12 @@ export default function HomeNavbar({
       <div>
         <div className="flex">
           {!!user ? (
-            <>
-              <div>
-                <Image src={src} alt={alt} height={33} width={33} />
-              </div>
-              <Link
-                href="/api/auth/logout"
-                className="bg-blue-400 text-white border p-1 px-4 rounded mr-3 ml-3"
-              >
-                Log out
-              </Link>
-            </>
+            <Link
+              href="/api/auth/logout"
+              className="bg-blue-400 text-white border p-1 px-4 rounded mr-3 ml-3"
+            >
+              Sign out
+            </Link>
           ) : (
             <Link
               href="/api/auth/login"

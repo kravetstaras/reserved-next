@@ -46,7 +46,7 @@ export default function Restaurant({
 }) {
   return (
     <Layout>
-      <RestaurantHead />
+      <RestaurantHead name={restaurant.name} />
       <RestaurantLayout slug={restaurant.slug}>
         <div className="bg-white w-[70%] rounded p-3 shadow">
           <RestaurantNavbar slug={restaurant.slug} />

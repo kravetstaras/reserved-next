@@ -35,7 +35,7 @@ export default function Menu({
 }) {
   return (
     <Layout>
-      <MenuHead />
+      <MenuHead name={slug} />
       <RestaurantLayout slug={slug}>
         <div className="bg-white w-[100%] rounded p-3 shadow">
           <RestaurantNavbar slug={slug} />

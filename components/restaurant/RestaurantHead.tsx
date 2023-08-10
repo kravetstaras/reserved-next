@@ -1,9 +1,9 @@
 import Head from "next/head";
 
-export default function RestaurantHead() {
+export default function RestaurantHead({ name }: { name: string }) {
   return (
     <Head>
-      <title>Milestones Grill | OpenTable</title>
+      <title>{name} | OpenTable</title>
     </Head>
   );
 }

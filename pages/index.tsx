@@ -4,6 +4,7 @@ import HomeHeader from "../components/home/HomeHeader";
 import { PrismaClient, PRICE } from "@prisma/client";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import HomeLayout from "../components/home/HomeLayout";
+import Head from "next/head";
 
 const prisma = new PrismaClient();
 interface IReview {
@@ -77,6 +78,9 @@ export default function Home({
 
   return (
     <HomeLayout user={user}>
+      <Head>
+        <title>OpenTable | Home</title>
+      </Head>
       <main>
         <HomeHeader />
         <div className="py-3 px-36 mt-10 flex flex-wrap justify-center">

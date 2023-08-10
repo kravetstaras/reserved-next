@@ -1,9 +1,10 @@
 import Head from "next/head";
+import { renderTitle } from "../../utils/renderTitle";
 
-export default function MenuHead() {
+export default function MenuHead({ name }: { name: string }) {
   return (
     <Head>
-      <title>Menu of Milestones Grill | OpenTable</title>
+      <title>{renderTitle(name)} | Menu</title>
     </Head>
   );
 }
