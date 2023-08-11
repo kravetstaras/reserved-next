@@ -19,6 +19,8 @@ interface IRestaurant {
   description: string;
   slug: string;
   reviews: Review[];
+  open_time: string;
+  close_time: string;
 }
 
 const prisma = new PrismaClient();
@@ -33,6 +35,8 @@ const fetchRestaurant = async (slug: string): Promise<IRestaurant | null> => {
       description: true,
       slug: true,
       reviews: true,
+      open_time: true,
+      close_time: true,
     },
   });
 
@@ -56,8 +60,12 @@ export default function Restaurant({
           <RestaurantImages images={restaurant.images} />
           <RestaurantReviews reviews={restaurant.reviews} />
         </div>
-        <div className="w-[27%] relative text-reg">
-          <RestaurantReservationCard />
+        <div className="w-[27%] min-h-max text-reg">
+          <RestaurantReservationCard
+            openTime={restaurant.open_time}
+            closeTime={restaurant.close_time}
+            slug={restaurant.slug}
+          />
         </div>
       </RestaurantLayout>
     </Layout>
